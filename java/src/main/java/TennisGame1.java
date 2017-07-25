@@ -20,57 +20,36 @@ public class TennisGame1 implements TennisGame {
 
     public String getScore() {
         String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
-            }
+        if (isAll()) {
+            if(m_score1>=3) score = "Deuce";
+            else score = convertToString(m_score1)+"-All";
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+        else if(isAdvantage()) {
+            score = (m_score1 - m_score2 == 1) ? "Advantage player1" : "Advantage player2";
+        }else if(isWinner()) {
+            score = (m_score1-m_score2 >=2)? "Win for player1" : "Win for player2";
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+        else {
+            score = convertToString(m_score1)+ "-" + convertToString(m_score2);
         }
         return score;
+    }
+
+    public boolean isAll(){
+        return (m_score1==m_score2);
+    }
+
+    public boolean isAdvantage(){
+        return (Math.abs(m_score1-m_score2)==1 &&(m_score1>=4 || m_score2>=4));
+    }
+
+    public boolean isWinner(){
+        return (Math.abs(m_score1-m_score2)>=2 &&(m_score1>=4 || m_score2>=4));
+    }
+
+    public String convertToString(int input){
+        if(input>3) return "";
+        String[] score = {"Love", "Fifteen", "Thirty", "Forty"};
+        return score[input];
     }
 }
